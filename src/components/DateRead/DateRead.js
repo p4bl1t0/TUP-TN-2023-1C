@@ -1,9 +1,6 @@
 import "./DateRead.css";
 
 const DateRead = ({ dateRead }) => {
-  const clickHandler = () => {
-    console.log("Clickeaste la fecha campeon");
-  };
   const year = dateRead.getFullYear();
   const month = dateRead.toLocaleString("es-AR", { month: "long" });
   const day = dateRead.toLocaleString("es-AR", { day: "2-digit" });

@@ -1,33 +1,18 @@
 import BookItem from "../BookItem/BookItem";
 
 const Books = ({ books }) => {
+  const booksMapped = books.map((book, index) => (
+    <BookItem
+      key={book.id}
+      title={book.title}
+      author={book.author}
+      dateRead={book.dateRead}
+      pageCount={book.pageCount}
+    />
+  ));
+
   return (
-    <>
-      <BookItem
-        title={books[0].title}
-        author={books[0].author}
-        dateRead={books[0].dateRead}
-        pageCount={books[0].pageCount}
-      />
-      <BookItem
-        title={books[1].title}
-        author={books[1].author}
-        dateRead={books[1].dateRead}
-        pageCount={books[1].pageCount}
-      />
-      <BookItem
-        title={books[2].title}
-        author={books[2].author}
-        dateRead={books[2].dateRead}
-        pageCount={books[2].pageCount}
-      />
-      <BookItem
-        title={books[3].title}
-        author={books[3].author}
-        dateRead={books[3].dateRead}
-        pageCount={books[3].pageCount}
-      />
-    </>
+    <>{booksMapped.length ? booksMapped : <p>No hay libros registrados</p>}</>
   );
 };
 
