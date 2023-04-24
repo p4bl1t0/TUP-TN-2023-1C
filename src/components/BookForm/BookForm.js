@@ -1,6 +1,8 @@
 import { useState } from "react";
 
-const BookForm = () => {
+import "./BookForm.css"
+
+const BookForm = ({onBookAdded}) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [dateRead, setDateRead] = useState("");
@@ -24,22 +26,20 @@ const BookForm = () => {
 
   const addBookHandler = (event) => {
     event.preventDefault();
-    console.log(title);
-    console.log(author);
-    console.log(dateRead);
-    console.log(pageCount);
+    const newBook = {title, author,dateRead: new Date(dateRead),pageCount};
+    onBookAdded(newBook);
   };
   return (
-    <form>
-      <div>
+    <form className="new-book-controls">
+      <div className="new-book-control" >
         <label>Titulo: </label>
         <input type="text" value={title} onChange={titleChangeHandler} />
       </div>
-      <div>
+      <div className="new-book-control">
         <label>Autor: </label>
         <input type="text" value={author} onChange={authorChangeHandler} />
       </div>
-      <div>
+      <div className="new-book-control">
         <label>¿Cuando terminaste de leerlo?</label>
         <input
           type="date"
@@ -49,7 +49,7 @@ const BookForm = () => {
           onChange={dateReadChangeHandler}
         />
       </div>
-      <div>
+      <div className="new-book-control">
         <label>Cantidad de paginas</label>
         <input
           type="number"
@@ -59,7 +59,7 @@ const BookForm = () => {
           onChange={pageCountChangeHandler}
         />
       </div>
-      <div>
+      <div className="new-book-actions">
         <button onClick={addBookHandler}>Agregar lectura</button>
       </div>
     </form>
