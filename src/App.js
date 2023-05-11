@@ -40,10 +40,14 @@ const BOOKS = [
 const App = () => {
   const [books, setBooks] = useState(BOOKS);
   const [booksFiltered, setBooksFiltered] = useState(BOOKS);
+  const [ yearSelected, setYearSelected ] = useState('');
 
   const addBookHandler = (book) => {
+    console.log(book);
     setBooks((prevBooks) => [book, ...prevBooks]);
-    console.log(books, book);
+    // FIXME
+    // useEffect
+    filterYearHandler(yearSelected);
   };
 
   // const booksReset =() => {
@@ -52,11 +56,17 @@ const App = () => {
 
   const filterYearHandler = (year) => {
     console.log(year);
-    const booksFiltered2 = books.filter((book) => {
-      console.log(book.dateRead.getFullYear());
-      return book.dateRead.getFullYear().toString() === year;
-    });
-    setBooksFiltered(booksFiltered2);
+    if (year > 0) {
+      setYearSelected(year);
+      const booksFiltered2 = books.filter((book) => {
+        console.log(book.dateRead.getFullYear());
+        return book.dateRead.getFullYear().toString() === year;
+      });
+      setBooksFiltered(booksFiltered2);
+    } else {
+      setYearSelected('');
+      setBooksFiltered(books);
+    }
   };
 
   return (
