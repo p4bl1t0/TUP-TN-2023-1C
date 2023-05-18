@@ -8,6 +8,7 @@ const NewBook = ({ onBookAdded }) => {
       ...book,
     };
     onBookAdded(newNewBook);
+
   };
   return (
     <div className="new-book">

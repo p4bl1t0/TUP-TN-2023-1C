@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import "./BookForm.css";
 import Input from "../Input/Input";
+import useFecthBooks from "../../hooks/useFetchBooks";
 
 // FIXME
 function validateForm (formValidation, formData) {
@@ -17,10 +18,9 @@ function validateForm (formValidation, formData) {
 }
 
 
-const BookForm = ({onBookAdded}) => {
+const BookForm = ({onBookAdded, key}) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const [category, setCategory] = useState("");
   const [dateRead, setDateRead] = useState("");
   const [pageCount, setPageCount] = useState("");
 
@@ -107,43 +107,76 @@ const BookForm = ({onBookAdded}) => {
     }
   };
 
+
+
+
+  const timerRef = useRef(null);
   const titleBlurHandler = () => {
     console.log('titleBlurHandler', authorInputRef);
+    // por referencia llamo al foco
     authorInputRef.current.focus();
-    // document.querySelector('.author-input').focus();
+    // useRef para timers y poder apagarlo en otro lugar
     timerRef.current = setInterval(() => {
       console.log('title blur');
     }, 1000);
   }
+
   const authorInputRef = useRef(null); // titleInputRef.current
-  const categoryInputRef = useRef(null); // titleInputRef.current
+
+
+  const categoryInputRef = useRef(null); 
 
   const categoryChangeHandler = (event) => {
     categoryInputRef.current.value = event.target.value;
   };
-  const timerRef = useRef(null);
+
+
+  // Unidad 3.2 - Custom Hooks - useEffect Fecth API
+  const [language, setLanguage] = useState('English');
+  const availableBooks = useFecthBooks(language);
+  console.log('render', availableBooks);
 
   return (
     <form className="new-book-controls">
       <div className="new-book-control" >
         <label>Titulo: </label>
-        <input type="text" value={title} onChange={titleChangeHandler} onBlur={titleBlurHandler}  />
+        <select value={title} onChange={titleChangeHandler} onBlur={titleBlurHandler}>
+          { availableBooks.map((book, index) => (
+            <option key={index} value={book.title}>{book.title}</option>
+          )) }
+        </select>
+        {/* <input type="text" value={title} onChange={titleChangeHandler} onBlur={titleBlurHandler}  /> */}
+        { errors?.title && 
+          <div className="error">{ errors?.title }</div>
+        }
+      </div>
+      <div className="new-book-control" >
+        <label>Idioma: </label>
+        <select value={language} onChange={(event) => { setLanguage(event.target.value) }}>
+          <option value="English">Inglés</option>
+          <option value="Spanish">Español</option>
+        </select>
+        {/* <input type="text" value={title} onChange={titleChangeHandler} onBlur={titleBlurHandler}  /> */}
         { errors?.title && 
           <div className="error">{ errors?.title }</div>
         }
       </div>
       <div className="new-book-control">
-        <label>Autor: </label>
-        <input className="author-input" type="text" value={author} onChange={authorChangeHandler} onBlur={authorOnBlurHandler} ref={authorInputRef} />
-        { errors?.author && 
-          <div className="error">{ errors?.author }</div>
-        }
+        <Input
+          field='author'
+          label='Autor:'
+          value={author}
+          onChange={authorChangeHandler}
+          errors={errors}
+          ref={authorInputRef}
+        />
       </div>
       <div className="new-book-control">
-        <label>Categoria: </label>
+        {/* Input no controlado */}
+        <label>Categoría: </label>
         <input className="author-input" type="text" onChange={categoryChangeHandler} ref={categoryInputRef} />
-        { errors?.author && 
-          <div className="error">{ errors?.author }</div>
+        { errors?.category && 
+          <div className="error">{ errors?.category }</div>
         }
       </div>
       <div className="new-book-control">
