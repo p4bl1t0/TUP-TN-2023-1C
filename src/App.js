@@ -1,10 +1,15 @@
-import { useState } from "react";
+/* eslint-disable default-case */
+import { useReducer, useState } from "react";
 
 import "./App.css";
 
 import Books from "./components/Books/Books";
 import NewBook from "./components/NewBook/NewBook";
 import BooksFilter from "./components/BookFilter/BookFilter";
+
+import ThemeContext from "./components/Context/ThemeContext";
+import ThemeDispatchContext from "./components/Context/ThemeDispatchContext";
+import AuthContext from "./components/Context/AuthContext";
 
 const BOOKS = [
   {
@@ -69,11 +74,56 @@ const App = () => {
     }
   };
 
+  const [ appTheme, setAppTheme ] = useState('dark');
+
+  const onChangeThemeClick = () => {
+    setAppTheme(appTheme === 'dark' ? 'light' : 'dark');
+  }
+
+  // REVIEW: Combinación de useReducer y Context
+  const reducerUser = (state, action) => {
+    switch (action.type) {
+      case 'login': 
+        // setLoggedInUser({ name: '' });
+        if (typeof action.user === 'object') {
+          // logica que modifique 
+          // action.user.age = 
+          return action.user;
+        }
+        // setLoggedInUser('fruta');
+        return state;
+      case 'logout':
+        return null;
+    }
+    return state;
+  }
+  // const [ loggedInUser, setLoggedInUser ] = useState(null);
+  const [ loggedUser, dispatch ] = useReducer(reducerUser, null);
+
+  dispatch.login = (paramUser) => {
+    dispatch({ type: 'login', user: paramUser})
+  }
+
+  // ;
+
   return (
     <div className="App">
-      <NewBook onBookAdded={addBookHandler} />
-      <BooksFilter onFilterYear={filterYearHandler} />
-      <Books books={booksFiltered} />
+      <button onClick={onChangeThemeClick}>Cambiar a { appTheme === 'dark' ? 'claro' : 'oscuro'}</button>
+      <button onClick={() => dispatch({ type: 'login', user: { name: 'Pablo' } })}>Login</button>
+      <button onClick={() => dispatch.login({ name: 'Pablo' })}>Login 2</button>
+      <button onClick={() => dispatch({ type: 'logout' })}>Logout</button>
+      
+      <div style={{ color: 'white' }}>Usuario: { loggedUser?.name }</div>
+      {/* REVIEW: Context todo en uno */}
+      <ThemeContext.Provider value={{ theme: appTheme, dispatch: setAppTheme }}>
+        {/* <ThemeDispatchContext.Provider value={setAppTheme}> */}
+          <AuthContext.Provider value={{ user: loggedUser, dispatch: dispatch }}>
+            <NewBook onBookAdded={addBookHandler} />
+            <BooksFilter onFilterYear={filterYearHandler} />
+            <Books books={booksFiltered} />
+          </AuthContext.Provider>
+        {/* </ThemeDispatchContext.Provider> */}
+      </ThemeContext.Provider>
     </div>
   );
 };

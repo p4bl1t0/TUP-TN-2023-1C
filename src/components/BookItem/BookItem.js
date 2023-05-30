@@ -3,7 +3,8 @@ import "./BookItem.css";
 import DateRead from "../DateRead/DateRead";
 import BookCard from "../BookCard/BookCard";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
+import ThemeContext from "../Context/ThemeContext";
 
 const BookItem = ({ title, author, dateRead, pageCount }) => {
   const [titleBook, setTitleBook] = useState(title);
@@ -14,9 +15,13 @@ const BookItem = ({ title, author, dateRead, pageCount }) => {
     console.log(titleBook);
   };
 
+  const themeSelected = useContext(ThemeContext).theme;
+
+  console.log('themeSelected', themeSelected);
   return (
     <BookCard>
-      <h2>{titleBook}</h2>
+    
+      <h2 className={themeSelected}>{titleBook}</h2>
       <h3>{author}</h3>
       <DateRead dateRead={dateRead} />
       <p>{pageCount}</p>

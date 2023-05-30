@@ -12,3 +12,7 @@
   align-items: center;
   justify-content: center;
 }
+.book-item-container.book-light {
+  border: 1px solid white;
+  background-color: black;
+}

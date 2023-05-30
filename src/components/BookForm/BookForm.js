@@ -212,4 +212,8 @@ const BookForm = ({onBookAdded, key}) => {
   );
 };
 
+BookForm.Input = () => {
+  return <input type="" />
+}
+
 export default BookForm;
